@@ -3,12 +3,13 @@ import {useDropzone} from 'react-dropzone'
 import './DropZone.scss'
 
 export default function MyDropzone(props) {
-    const fileInput = props.fileInput
+    const {uploadFormFile} = props
         let dropWrapper = "dropZone",
             fileName;
+            
         const onDrop = useCallback(acceptedFiles => {
-            fileInput(acceptedFiles)
-        }, [fileInput])
+            uploadFormFile(acceptedFiles)
+        }, [uploadFormFile])
 
         const {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({onDrop})
 

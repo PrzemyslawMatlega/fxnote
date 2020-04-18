@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React  from 'react'
 import Input from '../Input/Input';
 
 export default function InputsInPost(props) {
@@ -18,8 +18,5 @@ export default function InputsInPost(props) {
                 changed={(event) => props.inputChangedHandler(event, formElement.id)}
                 />));
 
-    return (<Fragment>
-
-        {allInputs}
-    </Fragment>)
+    return allInputs
 }

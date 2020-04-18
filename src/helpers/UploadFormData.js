@@ -17,7 +17,8 @@ const uploadFormData = {
         elementType: 'input',
         elementConfig: {
             type: 'number',
-            placeholder: 'Profit'
+            placeholder: 'Profit',
+            step: "0.1"
         },
         value: '',
         validation: {
@@ -30,7 +31,9 @@ const uploadFormData = {
         elementType: 'input',
         elementConfig: {
             type: 'number',
-            placeholder: 'Take profit'
+            placeholder: 'Take profit',
+            step: "0.1",
+            min: "0"
         },
         value: '',
         validation: {
@@ -43,7 +46,8 @@ const uploadFormData = {
         elementType: 'input',
         elementConfig: {
             type: 'number',
-            placeholder: 'stopLoss'
+            placeholder: 'Stop loss',
+            step: "0.1"
         },
         value: '',
         validation: {
