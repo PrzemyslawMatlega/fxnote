@@ -1,0 +1,18 @@
+.dropZone{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+    border: 3px dotted rgb(30, 163, 216);
+    transition: 0.3s all ease;
+
+    &--active{
+        // border: 3px dotted white;
+        background-color: rgb(30, 163, 216) ;
+    }
+    p{
+        cursor: pointer;
+        margin: 3rem 0;
+    }
+}

@@ -1,0 +1,32 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 3;
+    top: 10rem;
+    right: 0;
+    padding: 1rem;
+    background: #fff;
+    border-left: 1px solid #cecece;
+    border-top: 1px solid #cecece;
+    border-bottom: 1px solid #cecece;
+    opacity: 0.2;
+    transition: 0.3s all ease;
+    
+    &:hover{
+        opacity: 1;
+    }
+
+    &__img{
+        width: 3rem;
+        height: 3rem;
+        margin: 1rem 0;
+        cursor: pointer;
+        object-fit: contain;
+        transition: 0.1s all ease;
+        
+        &:hover{
+            transform: scale(1.05);
+        }
+    }
+}

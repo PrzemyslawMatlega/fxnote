@@ -1,0 +1,15 @@
+.postsList{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 7rem auto 0;
+
+    &__grid{
+        display: grid;
+        grid-template-columns: repeat(4, 25rem);
+        grid-auto-rows: 25rem;
+        grid-column-gap: 4rem;
+        grid-row-gap: 4rem;
+    }
+
+}
