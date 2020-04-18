@@ -1,5 +1,5 @@
 import React from "react";
-import MyDropzone from './UploadPopupDropZone/UploadPopupDropZone';
+import MyDropzone from '../Form/DropZone/UploadPopupDropZone';
 
 import './UploadPopup.scss'
 
@@ -15,6 +15,7 @@ export default function UploadPopup(props) {
                     onSubmit={props.uploadTrade}>
                     <button type="submit" className="uploadForm__button">Upload!</button>
                 </form>
+
                 <div className="uploadForm__status">
                     {props.uploadStatus}
                 </div>

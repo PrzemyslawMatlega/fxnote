@@ -16,7 +16,7 @@ export default class Layout extends Component {
     });
   };
   closeUpload = (event) => {
-    if(event.target.classList[0] === "uploadPopup"){
+    if(event.target.classList[0] === "popup"){
       this.setState({ uploadPopupSwitch: false})
     }
   }
