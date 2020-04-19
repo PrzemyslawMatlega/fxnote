@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import classes from './UploadForm.module.scss';
 import firebase from "../../../firebase";
-import uploadFormData from '../../../helpers/UploadFormData';
+import uploadFormDataTemplate from '../../../helpers/UploadFormDataTemplate';
 import DropZone from '../DropZone/DropZone'
 import InputsInPost from '../InputsInPost/InputsInPost';
 import Button from '../../Button/Button'
@@ -10,47 +10,77 @@ export default class UploadForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            uploadFormData,
+            uploadFormData: uploadFormDataTemplate,
             uploadFormFile: '',
-            uploadStatus: ''
+            uploadStatus: '',
+            formError: ''
         }
     }
+
+    componentDidUpdate() {
+        if (this.state.uploadStatus === 'Error' || this.state.uploadStatus === 'Complete') {
+            setTimeout(() => {
+                this.setState({uploadStatus: ''})
+            }, 500);
+        }
+
+        if(this.state.formError !== ''){
+            setTimeout(() => {
+                this.setState({formError: ''})
+            }, 500);
+        }
+    }
+
     uploadTradeDB = (uniqueId) => {
+        const formData = {};
+        for (let formElementIdentifier in this.state.uploadFormData) {
+            formData[formElementIdentifier] = this.state.uploadFormData[formElementIdentifier].value;
+        }
+
         firebase
             .database()
             .ref(`posts/${uniqueId}`)
             .set({
                 imgName: uniqueId,
-                createdAt: firebase.database.ServerValue.TIMESTAMP
-            }, (error) => console.log(error));
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                formData
+            }, (error) => console.log(error))
+            .then(() => {
+                this.setState({uploadStatus: "Complete", uploadFormData: uploadFormDataTemplate, uploadFormFile: ''});
+            })
     }
 
     uploadTrade = event => {
         event.preventDefault();
-        console.log(this.state)
-        const uniqueId = "_" + Math
-            .random()
-            .toString(36)
-            .substr(2, 9);
+        if(this.state.uploadFormFile !== ''){
 
-        const uploadFirebase = firebase
-            .storage()
-            .ref(`fx_images/${uniqueId}`);
-        const uploadTask = uploadFirebase.put(this.state.uploadFormFile[0]);
-        const that = this;
+            const uniqueId = "_" + Math
+                .random()
+                .toString(36)
+                .substr(2, 9);
 
-        uploadTask.on("state_changed", function progress(snapshot) {
-            that.setState({uploadStatus: "In progress"});
-        }, function error(err) {
-            that.setState({uploadStatus: "Error"});
-        }, function complete() {
-            that.uploadTradeDB(uniqueId)
-            that.setState({ uploadStatus: "Complete"});
-        });
+            const uploadFirebase = firebase
+                .storage()
+                .ref(`fx_images/${uniqueId}`);
+            const uploadTask = uploadFirebase.put(this.state.uploadFormFile[0]);
+            const that = this;
+
+            uploadTask.on("state_changed", function progress(snapshot) {
+                that.setState({uploadStatus: "In progress"});
+            }, function error(err) {
+                that.setState({uploadStatus: "Error", uploadFormData: uploadFormDataTemplate, uploadFormFile: ''});
+            }, function complete() {
+                that.uploadTradeDB(uniqueId)
+            });
+        
+        }
+        else{
+            this.setState({formError: 'Please fill form'})
+        }
     };
 
-    setFile = fileData =>{
-        this.setState({uploadFormFile : fileData })
+    setFile = fileData => {
+        this.setState({uploadFormFile: fileData})
     }
 
     checkValidity(value, rules) {
@@ -107,11 +137,18 @@ export default class UploadForm extends Component {
         return (
             <div>
                 <form onSubmit={this.uploadTrade} className={classes.uploadForm}>
-                    <DropZone uploadFormFile={this.setFile}/>
+                    <DropZone setFormFile={this.setFile} uploadStatus={this.state.uploadStatus} uploadFormFile={this.state.uploadFormFile}/>
                     <InputsInPost
                         uploadFormData={this.state.uploadFormData}
                         inputChangedHandler={this.inputChangedHandler}/>
-                    <Button btnClass="Upload" >Upload</Button>
+                    <Button
+                        btnClass="Upload"
+                        disabled={this.state.uploadStatus === ''
+                        ? false
+                        : true}>Upload</Button>
+                    <div className={classes.statusMsg}>
+                        <h3 className={classes.statusMsg__txt} >{this.state.uploadStatus} {this.state.formError}</h3>
+                    </div>
                 </form>
             </div>
         )

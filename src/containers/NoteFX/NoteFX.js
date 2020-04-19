@@ -100,12 +100,6 @@ export default class NoteFX extends Component {
                     ? <Popup closeUpload={this.props.closeUpload}>
                             <UploadForm/>
                         </Popup>
-                    // <UploadPopup     closeUpload={this.props.closeUpload}
-                    // fileInput={this.updatePickedFile}     fileName={this.state.fileInput === ""
-                    // || this.state.fileInput === undefined     ? ""     :
-                    // this.state.fileInput.name}     uploadStatus={this.state.uploadStatus}
-                    // uploadTrade={this.uploadTrade}> </UploadPopup>
-
                     : null}
 
                 <PostsLists

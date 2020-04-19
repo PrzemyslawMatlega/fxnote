@@ -1,4 +1,4 @@
-const uploadFormData = {
+const uploadFormDataTemplate = {
     setupName: {
         elementType: 'select',
         elementConfig: {
@@ -58,4 +58,4 @@ const uploadFormData = {
     }
 }
 
-export default uploadFormData
+export default uploadFormDataTemplate
