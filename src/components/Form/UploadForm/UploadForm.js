@@ -24,7 +24,7 @@ export default class UploadForm extends Component {
             }, 500);
         }
 
-        if(this.state.formError !== ''){
+        if (this.state.formError !== '') {
             setTimeout(() => {
                 this.setState({formError: ''})
             }, 500);
@@ -33,6 +33,12 @@ export default class UploadForm extends Component {
 
     uploadTradeDB = (uniqueId) => {
         const formData = {};
+        let today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        const yyyy = today.getFullYear();
+        today = dd + mm + yyyy;
+
         for (let formElementIdentifier in this.state.uploadFormData) {
             formData[formElementIdentifier] = this.state.uploadFormData[formElementIdentifier].value;
         }
@@ -43,7 +49,7 @@ export default class UploadForm extends Component {
             .set({
                 imgName: uniqueId,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                formData
+                date: today
             }, (error) => console.log(error))
             .then(() => {
                 this.setState({uploadStatus: "Complete", uploadFormData: uploadFormDataTemplate, uploadFormFile: ''});
@@ -52,7 +58,8 @@ export default class UploadForm extends Component {
 
     uploadTrade = event => {
         event.preventDefault();
-        if(this.state.uploadFormFile !== ''){
+        if (this.state.uploadFormFile !== '') {
+            const that = this;
 
             const uniqueId = "_" + Math
                 .random()
@@ -63,7 +70,6 @@ export default class UploadForm extends Component {
                 .storage()
                 .ref(`fx_images/${uniqueId}`);
             const uploadTask = uploadFirebase.put(this.state.uploadFormFile[0]);
-            const that = this;
 
             uploadTask.on("state_changed", function progress(snapshot) {
                 that.setState({uploadStatus: "In progress"});
@@ -72,9 +78,8 @@ export default class UploadForm extends Component {
             }, function complete() {
                 that.uploadTradeDB(uniqueId)
             });
-        
-        }
-        else{
+
+        } else {
             this.setState({formError: 'Please fill form'})
         }
     };
@@ -137,7 +142,10 @@ export default class UploadForm extends Component {
         return (
             <div>
                 <form onSubmit={this.uploadTrade} className={classes.uploadForm}>
-                    <DropZone setFormFile={this.setFile} uploadStatus={this.state.uploadStatus} uploadFormFile={this.state.uploadFormFile}/>
+                    <DropZone
+                        setFormFile={this.setFile}
+                        uploadStatus={this.state.uploadStatus}
+                        uploadFormFile={this.state.uploadFormFile}/>
                     <InputsInPost
                         uploadFormData={this.state.uploadFormData}
                         inputChangedHandler={this.inputChangedHandler}/>
@@ -147,7 +155,7 @@ export default class UploadForm extends Component {
                         ? false
                         : true}>Upload</Button>
                     <div className={classes.statusMsg}>
-                        <h3 className={classes.statusMsg__txt} >{this.state.uploadStatus} {this.state.formError}</h3>
+                        <h3 className={classes.statusMsg__txt}>{this.state.uploadStatus} {this.state.formError}</h3>
                     </div>
                 </form>
             </div>

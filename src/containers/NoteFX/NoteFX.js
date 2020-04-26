@@ -3,7 +3,9 @@ import Popup from "../../components/Popup/Popup";
 import UploadForm from '../../components/Form/UploadForm/UploadForm'
 import PostsLists from "../../components/PostsList/PostsLists";
 import SwitchListButtons from "../../components/SwitchListButtons/SwitchListButtons";
+import FilterForm from '../../components/Form/FilterForm/FilterForm';
 import firebase from "../../firebase";
+import cleanFilters from '../../helpers/CleanFilters'
 
 export default class NoteFX extends Component {
     state = {
@@ -11,79 +13,77 @@ export default class NoteFX extends Component {
         allPostsNameList: [],
         postsLoader: false,
         postsListGridView: false,
+        showPopupFilter: false,
+        filters: cleanFilters
     };
 
-    componentDidMount() {
+    getImage = (newPosts) => {
 
-        const getImage = (newPosts) => {
+        this.setState({postsLoader: true})
+        const newAllPosts = [...this.state.allPosts]
 
-            this.setState({postsLoader: true})
-            const newAllPosts = [...this.state.allPosts]
+        newPosts.forEach(singlePost => {
+            const newAllPostsNameList = [...this.state.allPostsNameList]
+            newAllPostsNameList.push(singlePost.imgName)
+            this.setState({allPostsNameList: newAllPostsNameList})
 
-            newPosts.forEach(singlePost => {
-                const newAllPostsNameList = [...this.state.allPostsNameList]
-                newAllPostsNameList.push(singlePost.imgName)
-                this.setState({allPostsNameList: newAllPostsNameList})
+            const listRef = firebase
+                .storage()
+                .ref()
+                .child(`fx_images/${singlePost.imgName}`);
 
-                const listRef = firebase
-                    .storage()
-                    .ref()
-                    .child(`fx_images/${singlePost.imgName}`);
-
-                listRef
-                    .getDownloadURL()
-                    .then(url => {
-                        newAllPosts.push({
-                            ...singlePost,
-                            url: url
-                        })
+            listRef
+                .getDownloadURL()
+                .then(url => {
+                    newAllPosts.push({
+                        ...singlePost,
+                        url: url
                     })
-                    .catch(error => {
-                        switch (error.code) {
-                            case "storage/object-not-found":
-                                break;
+                })
+                .catch(error => {
+                    switch (error.code) {
+                        case "storage/object-not-found":
+                            break;
 
-                            case "storage/unauthorized":
-                                break;
+                        case "storage/unauthorized":
+                            break;
 
-                            case "storage/canceled":
-                                break;
+                        case "storage/canceled":
+                            break;
 
-                            case "storage/unknown":
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-            });
-
-            setTimeout(() => {
-                newAllPosts.sort((a, b) => a.createdAt - b.createdAt).reverse()
-                this.setState({postsLoader: false, allPosts: newAllPosts})
-            }, 1000);
-        }
-
-        const checkForUpdates = (incomingPosts) => {
-            const newPosts = incomingPosts.filter(incomingPost => !this.state.allPostsNameList.includes(incomingPost.imgName));
-            getImage(newPosts);
-        }
-
-        const getPostsLists = () => {
-            firebase
-                .database()
-                .ref("/posts/")
-                .once("value")
-                .then(snapshot => {
-                    const postsFromDB = snapshot.val();
-                    const incomingPosts = [];
-
-                    for (const item in postsFromDB) {
-                        incomingPosts.push(postsFromDB[item]);
+                        case "storage/unknown":
+                            break;
+                        default:
+                            break;
                     }
-                    checkForUpdates(incomingPosts)
-                }, error => console.log(error));
-        }
-        getPostsLists()
+                });
+        });
+
+        setTimeout(() => {
+            newAllPosts.sort((a, b) => a.createdAt - b.createdAt).reverse()
+            this.setState({postsLoader: false, allPosts: newAllPosts})
+        }, 1000);
+    }
+
+    checkForUpdates = (incomingPosts) => {
+        const newPosts = incomingPosts.filter(incomingPost => !this.state.allPostsNameList.includes(incomingPost.imgName));
+        this.getImage(newPosts);
+    }
+
+    getPostsLists = () => {
+        firebase
+            .database()
+            .ref("/posts/")
+            .once("value")
+            .then(snapshot => {
+                const postsFromDB = snapshot.val();
+                const incomingPosts = [];
+
+                for (const item in postsFromDB) {
+                    incomingPosts.push(postsFromDB[item]);
+                }
+                this.checkForUpdates(incomingPosts)
+            }, error => console.log(error));
     }
 
     switchStyleList = (value) => {
@@ -91,14 +91,47 @@ export default class NoteFX extends Component {
             this.setState({postsListGridView: value})
         }
     }
+    closeFilterPopup = (event) => {
+        if (event.target.classList[0] === "popup") {
+            this.setState({showPopupFilter: false})
+        }
+    }
+
+    openFilterPopup = () => this.setState({showPopupFilter: true})
+
+    updateFilter = (event, id) => {        
+        const updatedFilters = {
+            ...this.state.filters
+        };
+        updatedFilters[id].value = event.target.value
+
+        this.setState({filters: updatedFilters});
+    }
+
+    componentDidMount() {
+        this.getPostsLists()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.uploadPopupSwitch === true && this.props.uploadPopupSwitch === false) {
+            this.getPostsLists()
+        }
+    }
 
     render() {
         return (
             <div>
-                <SwitchListButtons switchStyleList={this.switchStyleList}/>
-                 {this.props.uploadPopupSwitch
-                    ? <Popup closeUpload={this.props.closeUpload}>
+                <SwitchListButtons
+                    switchStyleList={this.switchStyleList}
+                    openFilterPopup={this.openFilterPopup}/> {this.props.uploadPopupSwitch
+                    ? <Popup closeFoo={this.props.closeUpload}>
                             <UploadForm/>
+                        </Popup>
+                    : null}
+
+                {this.state.showPopupFilter
+                    ? <Popup closeFoo={this.closeFilterPopup}>
+                            <FilterForm filterData={this.state.filters} updateFilter={this.updateFilter}/>
                         </Popup>
                     : null}
 

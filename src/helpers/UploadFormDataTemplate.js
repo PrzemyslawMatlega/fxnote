@@ -3,13 +3,13 @@ const uploadFormDataTemplate = {
         elementType: 'select',
         elementConfig: {
             options: [
-                {value: 'setup_m1m5', displayValue: 'Setup M1M5'},
-                {value: 'setup_m5m30', displayValue: 'Setup M5M30'},
-                {value: 'setup_odwrotka', displayValue: 'Setup odwrotka'},
+                {value: 'setup_1', displayValue: 'Setup 1'},
+                {value: 'setup_2', displayValue: 'Setup 2'},
+                {value: 'setup_3', displayValue: 'Setup 3'},
                 {value: 'setup_other', displayValue: 'Other'}
             ]
         },
-        value: 'setup_m1m5',
+        value: 'setup_1',
         validation: {},
         valid: true
     },
