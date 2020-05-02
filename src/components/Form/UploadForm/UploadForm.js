@@ -37,7 +37,7 @@ export default class UploadForm extends Component {
         const dd = String(today.getDate()).padStart(2, '0');
         const mm = String(today.getMonth() + 1).padStart(2, '0'); 
         const yyyy = today.getFullYear();
-        today = dd + mm + yyyy;
+        today = yyyy + mm + dd;
 
         for (let formElementIdentifier in this.state.uploadFormData) {
             formData[formElementIdentifier] = this.state.uploadFormData[formElementIdentifier].value;
@@ -49,7 +49,8 @@ export default class UploadForm extends Component {
             .set({
                 imgName: uniqueId,
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
-                date: today
+                date: today,
+                formData : formData
             }, (error) => console.log(error))
             .then(() => {
                 this.setState({uploadStatus: "Complete", uploadFormData: uploadFormDataTemplate, uploadFormFile: ''});
@@ -153,7 +154,7 @@ export default class UploadForm extends Component {
                         btnClass="Upload"
                         disabled={this.state.uploadStatus === ''
                         ? false
-                        : true}>Upload</Button>
+                        : true}>UPLOAD</Button>
                     <div className={classes.statusMsg}>
                         <h3 className={classes.statusMsg__txt}>{this.state.uploadStatus} {this.state.formError}</h3>
                     </div>

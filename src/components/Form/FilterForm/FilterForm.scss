@@ -1,3 +1,16 @@
 .filterForm {
-    
+    width: 55rem;
+
+    &__headline {
+        margin-bottom: 0rem;
+    }
+    &__button{
+
+    }
+
+    form{
+        display: flex;
+        flex-direction: column;
+    }
+
 }

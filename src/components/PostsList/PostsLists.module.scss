@@ -1,8 +1,28 @@
 .postsList{
     display: flex;
     flex-direction: column;
-    width: 90%;
-    margin: 7rem auto 0;
+    width: 95%;
+    padding-right: 5%;
+    margin: 4rem auto 0;
+    &__top{
+        margin-bottom: 4rem;
+    }
+    &__head{
+        font-size: 3.2rem;
+        margin:0 0 0.5rem;
+    }
+    &__subhead{
+        font-size: 1.6rem;
+        color: #777676;
+        font-style: italic;
+    }
+    
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
     &__grid{
         display: grid;

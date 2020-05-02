@@ -13,19 +13,18 @@ const cleanFilters ={
             type: 'date',
             min: '2020-01-01'
         },
-        value: '2020-01-12',
+        value: '2020-12-12',
     },
     setupName:{
-        elementType: 'select',
+        elementType: 'checkbox',
         elementConfig: {
             options: [
                 {value: 'setup_1', displayValue: 'Setup 1'},
                 {value: 'setup_2', displayValue: 'Setup 2'},
                 {value: 'setup_3', displayValue: 'Setup 3'},
-                {value: 'setup_other', displayValue: 'Other'}
             ]
         },
-        value: 'setup_1',
+        value: ['setup_1'],
     },
     profitRange: {
         active: false,

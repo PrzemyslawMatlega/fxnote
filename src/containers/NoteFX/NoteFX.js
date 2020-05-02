@@ -14,7 +14,8 @@ export default class NoteFX extends Component {
         postsLoader: false,
         postsListGridView: false,
         showPopupFilter: false,
-        filters: cleanFilters
+        filters: cleanFilters,
+        appliedFilters: cleanFilters
     };
 
     getImage = (newPosts) => {
@@ -91,6 +92,7 @@ export default class NoteFX extends Component {
             this.setState({postsListGridView: value})
         }
     }
+
     closeFilterPopup = (event) => {
         if (event.target.classList[0] === "popup") {
             this.setState({showPopupFilter: false})
@@ -99,14 +101,36 @@ export default class NoteFX extends Component {
 
     openFilterPopup = () => this.setState({showPopupFilter: true})
 
-    updateFilter = (event, id) => {        
+    updateFilter = (event, id) => {
         const updatedFilters = {
             ...this.state.filters
         };
-        updatedFilters[id].value = event.target.value
+        
+        if(id === 'setupName'){
+            if( this.state.filters.setupName.value.includes(event.target.value) ){
+                updatedFilters[id].value = updatedFilters[id].value.filter( item => item !== event.target.value )
+            }
+            else{
+                updatedFilters[id].value.push(event.target.value)
+            }
+        }
+        else{
+            updatedFilters[id].value = event.target.value
+        }
 
         this.setState({filters: updatedFilters});
     }
+
+    applyFilters = (event) => {
+        event.preventDefault();
+        
+        this.setState({appliedFilters: this.state.filters, postsLoader: true, showPopupFilter: false})
+
+        setTimeout(() => {
+            this.setState({postsLoader: false})
+        }, 500);
+    }
+
 
     componentDidMount() {
         this.getPostsLists()
@@ -116,6 +140,7 @@ export default class NoteFX extends Component {
         if (prevProps.uploadPopupSwitch === true && this.props.uploadPopupSwitch === false) {
             this.getPostsLists()
         }
+        
     }
 
     render() {
@@ -123,7 +148,9 @@ export default class NoteFX extends Component {
             <div>
                 <SwitchListButtons
                     switchStyleList={this.switchStyleList}
-                    openFilterPopup={this.openFilterPopup}/> {this.props.uploadPopupSwitch
+                    openFilterPopup={this.openFilterPopup}/>
+
+                {this.props.uploadPopupSwitch
                     ? <Popup closeFoo={this.props.closeUpload}>
                             <UploadForm/>
                         </Popup>
@@ -131,12 +158,16 @@ export default class NoteFX extends Component {
 
                 {this.state.showPopupFilter
                     ? <Popup closeFoo={this.closeFilterPopup}>
-                            <FilterForm filterData={this.state.filters} updateFilter={this.updateFilter}/>
+                            <FilterForm
+                                filterData={this.state.filters}
+                                updateFilter={this.updateFilter}
+                                applyFilters={this.applyFilters}/>
                         </Popup>
                     : null}
 
                 <PostsLists
                     allPosts={this.state.allPosts}
+                    appliedFilters = {this.state.appliedFilters}
                     postsLoader={this.state.postsLoader}
                     postsListGridView={this.state.postsListGridView}/>
             </div>
