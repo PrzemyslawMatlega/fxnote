@@ -21,7 +21,7 @@ export default class PostsLists extends Component {
         const dateEnd = parseFloat(this.props.appliedFilters.dateEnd.value.split("-").join(''))
         const dateStart = parseFloat(this.props.appliedFilters.dateStart.value.split("-").join(''))
         const headLineWithDates = `Posts from ${this.props.appliedFilters.dateStart.value} to ${this.props.appliedFilters.dateEnd.value}`
-        const subheadLine = `Categories: ${this.props.appliedFilters.setupName.value.join(', ')}`
+        const subheadLine = `Categories: ${this.props.appliedFilters.categoryName.value.join(', ')}`
         let contentClassName = classes.content
         if (this.props.postsListGridView) {
             contentClassName = [classes.content, classes.content__grid].join(' ')
@@ -33,9 +33,9 @@ export default class PostsLists extends Component {
                 validateCategory = this
                     .props
                     .appliedFilters
-                    .setupName
+                    .categoryName
                     .value
-                    .includes(singlePost.formData.setupName)
+                    .includes(singlePost.formData.categoryName)
 
             return (validateDateStart && validateDateEnd && validateCategory)
         }

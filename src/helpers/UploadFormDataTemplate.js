@@ -1,23 +1,23 @@
 const uploadFormDataTemplate = {
-    setupName: {
+    categoryName: {
         elementType: 'select',
         elementConfig: {
             options: [
-                {value: 'setup_1', displayValue: 'Setup 1'},
-                {value: 'setup_2', displayValue: 'Setup 2'},
-                {value: 'setup_3', displayValue: 'Setup 3'},
-                {value: 'setup_other', displayValue: 'Other'}
+                {value: 'select_1', displayValue: 'Select 1'},
+                {value: 'select_2', displayValue: 'Select 2'},
+                {value: 'select_3', displayValue: 'Select 3'},
+                {value: 'select_other', displayValue: 'Other'}
             ]
         },
-        value: 'setup_1',
+        value: 'select_1',
         validation: {},
         valid: true
     },
-    profit: {
+    numberData1: {
         elementType: 'input',
         elementConfig: {
             type: 'number',
-            placeholder: 'Profit',
+            placeholder: 'Data Number 1',
             step: "0.1"
         },
         value: '',
@@ -27,11 +27,11 @@ const uploadFormDataTemplate = {
         valid: false,
         touched: false
     },
-    takeProfit: {
+    numberData2: {
         elementType: 'input',
         elementConfig: {
             type: 'number',
-            placeholder: 'Take profit',
+            placeholder: 'Data Number 2',
             step: "0.1",
             min: "0"
         },
@@ -42,11 +42,11 @@ const uploadFormDataTemplate = {
         valid: false,
         touched: false
     },
-    stopLoss: {
+    numberData3: {
         elementType: 'input',
         elementConfig: {
             type: 'number',
-            placeholder: 'Stop loss',
+            placeholder: 'Data Number 3',
             step: "0.1"
         },
         value: '',

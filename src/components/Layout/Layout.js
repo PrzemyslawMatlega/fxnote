@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NoteFX from "../../containers/NoteFX/NoteFX";
 import Navbar from "../Navbar/Navbar";
+import {Route} from 'react-router-dom';
 
 export default class Layout extends Component {
   constructor(props) {
@@ -25,10 +26,14 @@ export default class Layout extends Component {
     return (
       <div className="Layout">
         <Navbar toggleUploadPopup={ this.toggleUploadPopup} />
-        <NoteFX 
-          uploadPopupSwitch={this.state.uploadPopupSwitch} 
-          closeUpload= {this.closeUpload}
-          />
+        <Route path="/" render={(routeProps) => (
+          <NoteFX 
+            {...routeProps}
+            uploadPopupSwitch={this.state.uploadPopupSwitch} 
+            closeUpload= {this.closeUpload}
+            />
+
+        )}/>
       </div>
     );
   }

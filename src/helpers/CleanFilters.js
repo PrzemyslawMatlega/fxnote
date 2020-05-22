@@ -15,16 +15,17 @@ const cleanFilters ={
         },
         value: '2020-12-12',
     },
-    setupName:{
+    categoryName:{
         elementType: 'checkbox',
         elementConfig: {
             options: [
-                {value: 'setup_1', displayValue: 'Setup 1'},
-                {value: 'setup_2', displayValue: 'Setup 2'},
-                {value: 'setup_3', displayValue: 'Setup 3'},
+                {value: 'select_1', displayValue: 'Select 1'},
+                {value: 'select_2', displayValue: 'Select 2'},
+                {value: 'select_3', displayValue: 'Select 3'},
+                {value: 'select_other', displayValue: 'Other'}
             ]
         },
-        value: ['setup_1'],
+        value: ['select_1'],
     },
     profitRange: {
         active: false,

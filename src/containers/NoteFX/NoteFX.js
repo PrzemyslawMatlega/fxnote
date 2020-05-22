@@ -6,6 +6,7 @@ import SwitchListButtons from "../../components/SwitchListButtons/SwitchListButt
 import FilterForm from '../../components/Form/FilterForm/FilterForm';
 import firebase from "../../firebase";
 import cleanFilters from '../../helpers/CleanFilters'
+import {Route} from 'react-router-dom';
 
 export default class NoteFX extends Component {
     state = {
@@ -94,20 +95,27 @@ export default class NoteFX extends Component {
     }
 
     closeFilterPopup = (event) => {
-        if (event.target.classList[0] === "popup") {
-            this.setState({showPopupFilter: false})
+        if (event.target.classList[0] === "popup" && this.props.location.pathname === '/filters') {
+            this.props.history.push('/')
+        }
+    }
+    closeUploadPopup = (event) => {
+        if (event.target.classList[0] === "popup" && this.props.location.pathname === '/upload') {
+            this.props.history.push('/')
         }
     }
 
-    openFilterPopup = () => this.setState({showPopupFilter: true})
+    openFilterPopup = () => this.props.history.push('/filters')
+    
+    openUploadPopup = () => this.props.history.push('/upload')
 
     updateFilter = (event, id) => {
         const updatedFilters = {
             ...this.state.filters
         };
         
-        if(id === 'setupName'){
-            if( this.state.filters.setupName.value.includes(event.target.value) ){
+        if(id === 'categoryName'){
+            if( this.state.filters.categoryName.value.includes(event.target.value) ){
                 updatedFilters[id].value = updatedFilters[id].value.filter( item => item !== event.target.value )
             }
             else{
@@ -148,22 +156,24 @@ export default class NoteFX extends Component {
             <div>
                 <SwitchListButtons
                     switchStyleList={this.switchStyleList}
-                    openFilterPopup={this.openFilterPopup}/>
+                    openFilterPopup={this.openFilterPopup}
+                    openUploadPopup={this.openUploadPopup}
+                    />
 
-                {this.props.uploadPopupSwitch
-                    ? <Popup closeFoo={this.props.closeUpload}>
+                <Route path="/upload"  exact render={() => (
+                     <Popup closeFoo={this.closeUploadPopup}>
                             <UploadForm/>
                         </Popup>
-                    : null}
+                )} />
 
-                {this.state.showPopupFilter
-                    ? <Popup closeFoo={this.closeFilterPopup}>
+                <Route path="/filters"  exact render={() => (
+                    <Popup closeFoo={this.closeFilterPopup}>
                             <FilterForm
                                 filterData={this.state.filters}
                                 updateFilter={this.updateFilter}
                                 applyFilters={this.applyFilters}/>
-                        </Popup>
-                    : null}
+                    </Popup>
+                )} />
 
                 <PostsLists
                     allPosts={this.state.allPosts}
